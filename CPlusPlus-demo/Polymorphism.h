@@ -9,6 +9,8 @@ class Animal
 public:
 	Animal(){ cout << "Animal Create..." << endl; }
 	virtual ~Animal(){ cout << "Animal Delete..." << endl; }
+
+
 	/*
 	* 编译器为每个类的对象提供一个虚表指针，这个指针指向对象所属类的虚表。在程序运行时，根据对象的类型去初始化vptr，
 	* 从而让vptr正确的指向所属类的虚表，从而在调用虚函数时，就能够找到正确的函数。
@@ -22,6 +24,7 @@ public:
 	*当执行子类的构造函数时，子类对象的虚表指针被初始化，指向自身的虚表。
 	*/
 	virtual void sleep() { cout << "Animal sleep..." << endl; }
+
 	virtual void run() = 0;
 	/*
 	* 1.从编译者角度来说
@@ -34,8 +37,11 @@ public:
 	* 那么当我们利用类型转换后的对象指针去调用它的方法时，当然也就是调用它所在的内存中的方法。因此，输出Animal eat，也就顺理成章了
 	*/
 	void eat() { cout << "Animal eat..." << endl; }
+
 private:
+
 };
+
 class Tiger : public Animal
 {
 public:
@@ -44,7 +50,7 @@ public:
 
 	void sleep() { cout << "Tiger sleep..." << endl; }
 
-	//void run() { cout << "Tiger run..." << endl; };
+	void run() { cout << "Tiger run..." << endl; };
 
 	void eat() { cout << "Tiger eat..." << endl; }
 
