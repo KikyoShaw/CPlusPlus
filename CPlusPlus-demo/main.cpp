@@ -6,10 +6,24 @@ using namespace std;
 
 int main()
 {
-	Tiger tiger;
+	//Tiger tiger;
+	//Animal* pAn = &tiger;
+	/*Animal* pAn = new Tiger();*/
+	//pAn->sleep();
+	//pAn->eat();
+
+	cout << sizeof(Animal) << endl;
+
+	Animal animal;
+
+	/*Tiger tiger;
+
 	Animal* pAn = &tiger;
-	pAn->sleep();
-	pAn->eat();
+
+	pAn->sleep();*/
+
+	//delete pAn;
+	//pAn = nullptr;
 
 	system("pause");
 

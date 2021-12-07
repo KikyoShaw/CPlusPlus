@@ -7,14 +7,14 @@ using namespace std;
 class Animal
 {
 public:
-	Animal(){}
-	~Animal(){}
+	Animal(){ /*cout << "Animal Create..." << endl;*/ }
+	~Animal(){ /*cout << "Animal Delete..." << endl;*/ }
 
 
 	/*
 	* 编译器为每个类的对象提供一个虚表指针，这个指针指向对象所属类的虚表。在程序运行时，根据对象的类型去初始化vptr，
 	* 从而让vptr正确的指向所属类的虚表，从而在调用虚函数时，就能够找到正确的函数。
-	* 由于pAn实际指向的对象类型是Tiger，因此vptr指向的fish类的vtable，当调用pAn->breathe()时，
+	* 由于pAn实际指向的对象类型是Tiger，因此vptr指向的Tiger类的vtable，当调用pAn->breathe()时，
 	*根据虚表中的函数地址找到的就是Tiger类的breathe()函数。
 	*正是由于每个对象调用的虚函数都是通过虚表指针来索引的，也就决定了虚表指针的正确初始化是非常重要的。
 	*换句话说，在虚表指针没有正确初始化之前，我们不能够去调用虚函数。那么虚表指针在什么时候，或者说在什么地方初始化呢？
@@ -24,6 +24,8 @@ public:
 	*当执行子类的构造函数时，子类对象的虚表指针被初始化，指向自身的虚表。
 	*/
 	virtual void sleep() { cout << "Animal sleep..." << endl; }
+
+	virtual void run(){}
 
 	/*
 	* 1.从编译者角度来说
@@ -44,8 +46,8 @@ private:
 class Tiger : public Animal
 {
 public:
-	Tiger(){}
-	~Tiger(){}
+	Tiger(){ /*cout << "Tiger Create..." << endl;*/ }
+	~Tiger(){ /*cout << "Tiger Delete..." << endl;*/ }
 
 	void sleep() { cout << "Tiger sleep..." << endl; }
 
