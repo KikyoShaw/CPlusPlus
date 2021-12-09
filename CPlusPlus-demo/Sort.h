@@ -7,3 +7,4 @@ void BubbleSort(int a[], int n);
 void SelectionSort(int a[], int n);
 
 //快速排序(重点)
+void QuickSort(int a[], int left, int right);

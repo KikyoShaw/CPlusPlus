@@ -126,8 +126,10 @@ int main()
 		cout << a[i] << " ";
 	}
 
-	BubbleSort(a, n);
+	//BubbleSort(a, n);
 	//SelectionSort(a, n);
+
+	QuickSort(a, 0, n -1);
 
 	cout << endl <<"ÅÅĞòºó£º";
 	for (int i = 0; i < n; i++) {
