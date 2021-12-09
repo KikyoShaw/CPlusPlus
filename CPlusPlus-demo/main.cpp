@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Polymorphism.h"
 #include "Copy.h"
+#include "Sort.h"
 
 using namespace std;
 
@@ -30,46 +31,45 @@ using namespace std;
 */
 
 //以下测试均在x86环境下，32位
-#pragma pack(4)
-struct STU
-{
-	char s1; //1
-	int s2; //4  
-	double s3; //8 
-	char s4; //1
-	//由于字节对齐,字节大小为1+4+8+1 = 14
-};
-
-struct STU2
-{
-	char s1; //1 
-	STU s2; //14 
-	char s3; //1 
-	int s4; //4  
-	//由于字节对齐,字节大小为1+14+1+4 = 20
-};
-#pragma pack(pop)   //恢复对齐状态
-
-
+//#pragma pack(4)
 //struct STU
 //{
-//	//基准为8（最大所占字节空间）
-//	char s1; //1 所占空间为1，分配空间为8，此时整体空间为8 偏移量为0，剩余空间为7
-//	int s2; //4  所占空间为4，4+1<8, 因此整体空间还是8，偏移量为1， 剩余空间为3
-//	double s3; //8 所占空间为8， 4+1+8>8，因此继续分配8字节空间，此时整体空间为16，偏移量为0， 剩余空间为0
-//	char s4; //1  所占空间为1， 8+1>8, 因此继续分配8字节空间，此时整体空间为24，偏移量为0，剩余空间为7
-//	//因此，结构体STU所占字节大小为24
+//	char s1; //1
+//	int s2; //4  
+//	double s3; //8 
+//	char s4; //1
+//	//由于字节对齐,字节大小为1+4+8+1 = 14
 //};
 //
 //struct STU2
 //{
-//	//基准为8（父结构体和子结构体中最大所占字节空间）
-//	char s1; //1 所占空间为1，分配空间为8，此时整体空间为8 偏移量为0，剩余空间为7
-//	STU s2; //24 所占空间为24， STU结构体所占大小，不影响分配空间, 整体空间为32
-//	char s3; //1 所占空间为1，分配空间为8，此时整体空间为40 偏移量为0，剩余空间为7
-//	int s4; //4  所占空间为4，4+1<8, 因此整体空间还是40，偏移量为1， 剩余空间为3
-//	//因此，结构体STU2所占字节大小为40
+//	char s1; //1 
+//	STU s2; //14 
+//	char s3; //1 
+//	int s4; //4  
+//	//由于字节对齐,字节大小为1+14+1+4 = 20
 //};
+//#pragma pack(pop)   //恢复对齐状态
+
+struct STU
+{
+	//基准为8（最大所占字节空间）
+	char s1; //1 所占空间为1，分配空间为8，此时整体空间为8 偏移量为0，剩余空间为7
+	int s2; //4  所占空间为4，4+1<8, 因此整体空间还是8，偏移量为1， 剩余空间为3
+	double s3; //8 所占空间为8， 4+1+8>8，因此继续分配8字节空间，此时整体空间为16，偏移量为0， 剩余空间为0
+	char s4; //1  所占空间为1， 8+1>8, 因此继续分配8字节空间，此时整体空间为24，偏移量为0，剩余空间为7
+	//因此，结构体STU所占字节大小为24
+};
+
+struct STU2
+{
+	//基准为8（父结构体和子结构体中最大所占字节空间）
+	char s1; //1 所占空间为1，分配空间为8，此时整体空间为8 偏移量为0，剩余空间为7
+	STU s2; //24 所占空间为24， STU结构体所占大小，不影响分配空间, 整体空间为32
+	char s3; //1 所占空间为1，分配空间为8，此时整体空间为40 偏移量为0，剩余空间为7
+	int s4; //4  所占空间为4，4+1<8, 因此整体空间还是40，偏移量为1， 剩余空间为3
+	//因此，结构体STU2所占字节大小为40
+};
 
 int main()
 {
@@ -95,11 +95,50 @@ int main()
 
 	#pragma region 字节对齐
 
-	cout << sizeof(STU) << endl;
-
-	cout << sizeof(STU2) << endl;
+	//cout << sizeof(STU) << endl;
+	//cout << sizeof(STU2) << endl;
 
 	#pragma endregion
+
+	#pragma region 智能指针
+	
+	//unique_ptr<string> p1(new string("hello"));
+	//unique_ptr<string> p2(new string("world"));
+
+	//unique_ptr<string> p3;
+
+	///*p3 = p1;*/
+
+	//p3 = unique_ptr<string>(new string("Hello World!"));
+
+	//cout << p1->data() << endl;
+
+	//cout << p3->data() << endl;
+
+	#pragma endregion
+
+	#pragma region 排序算法
+
+	int a[6] = {13, 6, 8, 4, 9, 5};
+	int n = sizeof(a) / sizeof(int);
+	cout << "排序前：";
+	for (int i = 0; i < n; i++) {
+		cout << a[i] << " ";
+	}
+
+	BubbleSort(a, n);
+	//SelectionSort(a, n);
+
+	cout << endl <<"排序后：";
+	for (int i = 0; i < n; i++) {
+		cout << a[i] << " ";
+	}
+
+	cout << endl;
+
+	#pragma endregion
+
+
 
 	system("pause");
 
