@@ -128,8 +128,8 @@ int main()
 
 	//BubbleSort(a, n);
 	//SelectionSort(a, n);
-
-	QuickSort(a, 0, n -1);
+	//QuickSort(a, 0, n -1);
+	InsertionSort(a, n);
 
 	cout << endl <<"ÅÅÐòºó£º";
 	for (int i = 0; i < n; i++) {

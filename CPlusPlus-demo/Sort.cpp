@@ -61,25 +61,25 @@ void SelectionSort(int a[], int n)
 	}
 }
 
-void Swap(int A[], int i, int j)
+void Swap(int a[], int i, int j)
 {
-	int temp = A[i];
-	A[i] = A[j];
-	A[j] = temp;
+	int temp = a[i];
+	a[i] = a[j];
+	a[j] = temp;
 }
 
-int Partition(int A[], int left, int right)  // 划分函数
+int Partition(int a[], int left, int right)  // 划分函数
 {
-	int pivot = A[right];               // 这里每次都选择最后一个元素作为基准
+	int pivot = a[right];               // 这里每次都选择最后一个元素作为基准
 	int tail = left - 1;                // tail为小于基准的子数组最后一个元素的索引
 	for (int i = left; i < right; i++)  // 遍历基准以外的其他元素
 	{
-		if (A[i] <= pivot)              // 把小于等于基准的元素放到前一个子数组末尾
+		if (a[i] <= pivot)              // 把小于等于基准的元素放到前一个子数组末尾
 		{
-			Swap(A, ++tail, i);
+			Swap(a, ++tail, i);
 		}
 	}
-	Swap(A, tail + 1, right);           // 最后把基准放到前一个子数组的后边，剩下的子数组既是大于基准的子数组
+	Swap(a, tail + 1, right);           // 最后把基准放到前一个子数组的后边，剩下的子数组既是大于基准的子数组
 										// 该操作很有可能把后面元素的稳定性打乱，所以快速排序是不稳定的排序算法
 	return tail + 1;                    // 返回基准的索引
 }
@@ -102,6 +102,7 @@ void QuickSort(int a[], int left, int right)
 	//int pivot_index = Partition(a, left, right); // 基准的索引
 	//QuickSort(a, left, pivot_index - 1);
 	//QuickSort(a, pivot_index + 1, right);
+	//return;
 	int i = left;
 	int j = right;
 	int s1 = a[i]; //为了方便调试查看数据，可以定义s1和s2
@@ -126,4 +127,30 @@ void QuickSort(int a[], int left, int right)
 	a[i] = pivot;
 	QuickSort(a, left, i -1); //左边递归
 	QuickSort(a, i +1, right); //右边递归
+}
+/*
+* 插入排序
+* 原理：类似于抓扑克牌，把第一个元素当做已经被排序，放在已排序区域（左手抓第一张牌），然后剩余值都当做在未排序区域（牌堆）
+* 然后从牌堆依次摸牌（取值），从右往左遍历左手抓的牌（已排序的区域），按照大（小）排序规则把牌（值）插入合适的位置。
+* 平均时间复杂度：O(n^2)
+* 理想时间复杂度：O(n)
+* 最差时间复杂度：O(n^2)
+* 空间复杂度：O(1)
+* 稳定性：稳定
+* 数据结构：数组
+*/
+void InsertionSort(int a[], int n)
+{
+	for (int i = 1; i < n; i++) //默认第一个元素已经排序好，因此从第一个元素开始操作，下标从1开始
+	{
+		int target = a[i]; //相从牌堆摸到的牌
+		int j = i - 1; //遍历左手抓的牌
+		while (j >=0 && a[j] > target) //从右往左进行比较,选择合适位置插入
+		{
+			a[j + 1] = a[j]; //当前遍历到的牌比待插入的牌大，就当前遍历到的牌右移
+			j--;
+		}
+
+		a[j + 1] = target; //通过循环找到合适的空位，将牌插入
+	}
 }
