@@ -1,5 +1,17 @@
 #include "Sort.h"
 
+/*
+* 分治法是一种解决问题的思想：
+* 把大的问题分解成小问题的这个过程就叫“分”，
+* 解决小问题的过程就叫“治”，
+* 解决小问题的方法往往是递归。
+* 分治法的三大步骤：
+* 「分」：大问题分解成小问题；
+* 「治」：用同样的方法解决小问题；
+* 「合」：用小问题的解构造大问题的解。
+*/
+
+
 static void swap(int& a, int& b)
 {
 	int temp = a;
@@ -153,4 +165,28 @@ void InsertionSort(int a[], int n)
 
 		a[j + 1] = target; //通过循环找到合适的空位，将牌插入
 	}
+}
+
+/*
+* 归并操作，归并算法核心
+*/
+void Merge(int a[], int left, int mid, int right)
+{
+
+}
+
+/*
+* 归并排序(分治法)
+* 原理：该算法主要在于设计归并操作（Merge接口）
+* 
+* 平均时间复杂度：O(nlogn)
+* 理想时间复杂度：O(nlogn)
+* 最差时间复杂度：O(nlogn)
+* 空间复杂度：O(n)
+* 稳定性：稳定
+* 数据结构：数组
+*/
+void MergeSort(int a[], int left, int right)
+{
+
 }
