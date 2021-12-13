@@ -170,15 +170,45 @@ void InsertionSort(int a[], int n)
 /*
 * 归并操作，归并算法核心
 */
-void Merge(int a[], int left, int mid, int right)
+void Merge(int a[], int temp[], int left, int right)
 {
-
+	//申请内存空间N，空间复杂度为O(n)
+	int len = right - left + 1;
+	int mid = (left + right) / 2;
+	int index = 0;
+	int i = left;
+	int j = mid + 1;
+	int s1 = a[i]; int s2 = a[j]; int s3 = 0;//方便调试查看数据
+	while (i <= mid && j <= right && index < len) //排序处理
+	{   // 带等于是为了不交换相等值位置，即稳定性
+		s1 = a[i];s2 = a[j];
+		temp[index++] = a[i] <= a[j] ? a[i++] : a[j++];
+	}
+	//合并左边组数
+	while (i <= mid && index < len)
+	{
+		s1 = a[i];
+		temp[index++] = a[i++];
+	}
+	//合并右边数组
+	while (j <= right && index < len)
+	{
+		s2 = a[j];
+		temp[index++] = a[j++];
+	}
+	//合并临时数组空间数据到指定数组中
+	for (int k = 0; k < len; k++)
+	{
+		a[left++] = temp[k];
+		s3 = temp[k]; //此处可以查看 归并时数据的比较过程和合并过程
+	}
 }
 
 /*
 * 归并排序(分治法)
 * 原理：该算法主要在于设计归并操作（Merge接口）
-* 
+* 首先先拆分数组，可以利用递归的思想去进行操作，当拆分的元素只剩一个时，递归也就完成了。
+* 接下来就是合并拆分元素（从左到右合并），合并过程中比较待合并数组中的元素大小，按照大（小）排序，然后归并。
 * 平均时间复杂度：O(nlogn)
 * 理想时间复杂度：O(nlogn)
 * 最差时间复杂度：O(nlogn)
@@ -187,6 +217,34 @@ void Merge(int a[], int left, int mid, int right)
 * 数据结构：数组
 */
 void MergeSort(int a[], int left, int right)
+{
+	if (left >= right)
+		return;
+
+	int mid = (left + right) / 2;
+	//核心思想：使用递归先拆分，直到只剩一个元素，递归就结束了
+	//递归处理左边
+	MergeSort(a, left, mid);
+	//递归处理右边
+	MergeSort(a, mid + 1, right);
+	//申请内存空间N，空间复杂度为O(n)
+	int len = right - left + 1;
+	int *temp = new int[len];
+	//核心部分，合并数组
+	Merge(a, temp, left, right);
+}
+
+/*
+* 堆排序
+* 原理：
+* 平均时间复杂度：O(nlogn)
+* 理想时间复杂度：O(nlogn)
+* 最差时间复杂度：O(nlogn)
+* 空间复杂度：O(1)
+* 稳定性：不稳定
+* 数据结构：数组
+*/
+void HeapSort(int a[], int n)
 {
 
 }

@@ -129,7 +129,8 @@ int main()
 	//BubbleSort(a, n);
 	//SelectionSort(a, n);
 	//QuickSort(a, 0, n -1);
-	InsertionSort(a, n);
+	//InsertionSort(a, n);
+	MergeSort(a, 0, n-1);
 
 	cout << endl <<"ÅÅÐòºó£º";
 	for (int i = 0; i < n; i++) {

@@ -14,3 +14,6 @@ void InsertionSort(int a[], int n);
 
 //πÈ≤¢≈≈–Ú
 void MergeSort(int a[], int left, int right);
+
+//∂—≈≈–Ú
+void HeapSort(int a[], int n);
