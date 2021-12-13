@@ -235,8 +235,47 @@ void MergeSort(int a[], int left, int right)
 }
 
 /*
-* 堆排序
-* 原理：
+* 堆排序核心部分
+* 根据数组进行堆调整，从右到左，从下到上调整
+* 时间复杂度O(logn)
+*/
+void HeapIfy(int a[], int index, int size)
+{
+	int iLeftChild = 2 * index + 1; //左子节点索引
+	int iRightChild = 2 * index + 2; //右子节点索引
+	int iMax = index; //当前节点和左右子节点中最大值
+	int s1 = a[iLeftChild]; int s2 = a[iRightChild]; int s3 = a[index]; int s4 = 0;//方便调试查看数据
+	if (iLeftChild < size && a[iLeftChild] > a[iMax])
+		iMax = iLeftChild;
+	if (iRightChild < size && a[iRightChild] > a[iMax])
+		iMax = iRightChild;
+	s4 = a[iMax];
+	if (index != iMax) { //最大值不是父节点
+		swap(a[index], a[iMax]); //把当前节点和子节点进行交换
+		swap(s3, s4);
+		HeapIfy(a, iMax, size); //递归继续进行当前节点向下进行堆调整
+	}
+}
+
+/*
+*  构建初始化堆入口
+*  时间复杂度O(n)
+*/
+int BuildHeap(int a[], int n)
+{
+	int iHeadSize = n;
+	for (int i = iHeadSize / 2 - 1; i >= 0; i--) { //从每一个非叶结点开始向下进行堆调整
+		HeapIfy(a, i, n); 
+	}
+	return iHeadSize;
+}
+
+/*
+* 堆排序（二叉树）
+* 原理：堆是一个近似完全二叉树的结构。
+* 算法思想主要分两步，一是初始化堆，二是对堆进行排序(一般升序采用大顶堆，降序采用小顶堆)。
+* 每个结点的值都大于或等于其左右孩子结点的值，称为大顶堆。
+* 每个结点的值都小于或等于其左右孩子结点的值，称为小顶堆。
 * 平均时间复杂度：O(nlogn)
 * 理想时间复杂度：O(nlogn)
 * 最差时间复杂度：O(nlogn)
@@ -246,5 +285,21 @@ void MergeSort(int a[], int left, int right)
 */
 void HeapSort(int a[], int n)
 {
+	/*
+	* 此处采用升序 / 大顶堆的方式
+	* 思路：首先将待排序的数组构建成大顶堆，大顶堆的构建是算法的核心部分。
+	* 从最后一个非叶节点n/2-1的位置开始检查节点与其子节点值是否满足大顶堆的要求，不满足的话下需要调整该节点与其子节点位置，
+	* 如果有所调整，那么调整过的子节点也要递归操作之前父节点调整过程，确保子树也是大顶堆。
+	* 按照这个步骤依次往前，从右到左，从下到上调整所有非叶节点的值，确保根节点的值是数组最大值。
+	* 接下来将根节点的值与数组最后一个值进行交换，保证最大值到数组最后。
+	* 以此类推，继续上续操作与数组N-1所在那个值进行交换，最终能得到一个有序的数组。
+	*/
 
+	int iHeadSize = BuildHeap(a, n); //首先构造堆(大顶堆)
+	while (iHeadSize > 1)
+	{   //将堆顶根节点值和数组最后一个值交换
+		swap(a[0], a[--iHeadSize]); //此处交换会打乱相同值本身位置，因此不稳定
+		//进行堆调整
+		HeapIfy(a, 0, iHeadSize);
+	}
 }
