@@ -3,6 +3,9 @@
 //√∞≈›≈≈–Ú
 void BubbleSort(int a[], int n);
 
+//º¶Œ≤æ∆≈≈–Ú
+void CocktailSort(int a[], int n);
+
 //—°‘Ò≈≈–Ú
 void SelectionSort(int a[], int n);
 
