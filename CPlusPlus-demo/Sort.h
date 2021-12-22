@@ -15,6 +15,9 @@ void QuickSort(int a[], int left, int right);
 //插入排序
 void InsertionSort(int a[], int n);
 
+//二分插入法
+void InsertionSortDichotomy(int a[], int n);
+
 //希尔排序
 void ShellSort(int a[], int n);
 

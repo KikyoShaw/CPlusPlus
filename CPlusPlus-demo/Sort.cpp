@@ -208,6 +208,43 @@ void InsertionSort(int a[], int n)
 }
 
 /*
+* 二分插入排序
+* 原理：在插入排序的基础上采用二分查找法来减少比较次数
+* 相比直接插入排序，最差比较次数比其少，最好情况比其多
+* 平均时间复杂度：O(n^2)
+* 理想时间复杂度：O(nlogn)
+* 最差时间复杂度：O(n^2)
+* 空间复杂度：O(1)
+* 稳定性：稳定
+* 数据结构：数组
+*/
+void InsertionSortDichotomy(int a[], int n)
+{
+	int s1 = 0; int s2 = 0; int s3 = 0;//方便调试查看数据
+	for (int i = 1; i < n; i++) {
+		int target = a[i]; //相从牌堆摸到的牌
+		int left = 0; //左手抓牌区域，对此区域采取二分法
+		int right = i - 1; //遍历左手抓的牌
+		while (left <= right)// 采用二分法定位新牌插入的位置
+		{
+			int mid = (left + right) / 2;
+			s3 = a[mid];
+            if (a[mid] > target)
+                right = mid - 1;
+            else
+                left = mid + 1;
+		}
+		for (int j = i - 1; j >= left; j--) //插入新牌位置右边的牌整体向右移动一个单位
+        {
+			s1 = a[j + 1];
+			s2 = a[j];
+            a[j + 1] = a[j];
+        }
+        a[left] = target;//将牌堆摸到的牌插入左手抓牌区域
+	}
+}
+
+/*
 * 希尔排序/（缩小增量排序）/插入排序改进版
 * 原理：通过将比较的全部元素分为几个区域去使用插入排序，从而提升插入排序的性能。
 * 希尔排序是基于插入排序的以下两点性质而提出改进方法的：

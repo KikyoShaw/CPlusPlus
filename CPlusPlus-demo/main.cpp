@@ -163,7 +163,7 @@ int main()
 
 	#pragma region ≈≈–ÚÀ„∑®
 
-	int a[7] = {13, 6, 8, 4, 9, 5, 10};
+	int a[6] = {13, 6, 8, 4, 9, 5};
 	int n = sizeof(a) / sizeof(int);
 	cout << "≈≈–Ú«∞£∫";
 	for (int i = 0; i < n; i++) {
@@ -175,7 +175,8 @@ int main()
 	//SelectionSort(a, n);
 	//QuickSort(a, 0, n -1);
 	//InsertionSort(a, n);
-	 ShellSort(a, n);
+	 //ShellSort(a, n);
+	 InsertionSortDichotomy(a, n);
 	//MergeSort(a, 0, n-1);
 	//HeapSort(a, n);
 
