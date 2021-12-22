@@ -3,6 +3,8 @@
 #include "Copy.h"
 #include "Sort.h"
 
+#include <bitset>
+
 using namespace std;
 
 /*
@@ -71,6 +73,48 @@ struct STU2
 	//因此，结构体STU2所占字节大小为40
 };
 
+int isBigEndian()
+{
+	unsigned short t = 1;
+	unsigned char* m = (unsigned char*)&t;
+	return m[1];
+}
+
+string c2b(char* cp, int n)
+{
+	string tmpStr = "";
+	for (int i = 0; i < n; i++)
+	{
+		char ch = cp[i];
+		char shift = ch >> 1;
+		for (int j = 0; j < 8; j++)
+		{
+			if (ch == (shift << 1))
+				tmpStr += "0";
+			else if (ch != (shift << 1))
+				tmpStr += "1";
+			ch = shift;
+			shift = shift >> 1;
+		}
+	}
+	return tmpStr;
+}
+
+void PrintfBinary(unsigned char cData)
+{
+	for (int i = 7; i >= 0; i--)
+	{
+		if (cData & (1 << i))
+		{
+			cout << "1";
+		}
+		else
+		{
+			cout << "0";
+		}
+	}
+}
+
 int main()
 {
 	#pragma region 多态&&虚函数&&纯虚函数 示例
@@ -119,31 +163,93 @@ int main()
 
 	#pragma region 排序算法
 
-	int a[6] = {13, 6, 8, 4, 9, 5};
-	int n = sizeof(a) / sizeof(int);
-	cout << "排序前：";
-	for (int i = 0; i < n; i++) {
-		cout << a[i] << " ";
-	}
+	//int a[6] = {13, 6, 8, 4, 9, 5};
+	//int n = sizeof(a) / sizeof(int);
+	//cout << "排序前：";
+	//for (int i = 0; i < n; i++) {
+	//	cout << a[i] << " ";
+	//}
 
-	//BubbleSort(a, n);
-	 CocktailSort(a, n);
-	//SelectionSort(a, n);
-	//QuickSort(a, 0, n -1);
-	//InsertionSort(a, n);
-	//MergeSort(a, 0, n-1);
-	//HeapSort(a, n);
+	////BubbleSort(a, n);
+	// //CocktailSort(a, n);
+	////SelectionSort(a, n);
+	////QuickSort(a, 0, n -1);
+	////InsertionSort(a, n);
+	// ShellSort(a, n);
+	////MergeSort(a, 0, n-1);
+	////HeapSort(a, n);
 
-	cout << endl <<"排序后：";
-	for (int i = 0; i < n; i++) {
-		cout << a[i] << " ";
-	}
+	//cout << endl <<"排序后：";
+	//for (int i = 0; i < n; i++) {
+	//	cout << a[i] << " ";
+	//}
 
-	cout << endl;
+	//cout << endl;
 
 	#pragma endregion
 
+	#pragma region DOUBLE
 
+	/*
+	* 浮点数内存表示
+目前C/C++编译器标准都遵照IEEE制定的浮点数表示法来进行float,double运算。这种结构是一种科学计数法，
+用符号、指数和尾数(最高位的1不写入内存)来表示，底数定为2——即把一个浮点数表示为尾数乘以2的指数次方再添上符号。下面是具体的规格：
+	  符号位 阶码 尾数 长度
+float   1      8    23   32
+double  1     11   52   64
+
+举例：-12.5转为单精度二进制表示
+
+12.5:
+1. 整数部分12，二进制为1100; 小数部分0.5, 二进制是.1，先把他们连起来，从第一个1数起取24位（后面补0）：
+1100.10000000000000000000
+这部分是有效数字。（把小数点前后两部分连起来再取掉头前的1，就是尾数）
+2. 把小数点移到第一个1的后面，需要左移3位（1.10010000000000000000000*2^3）, 加上偏移量127：127+3=130，二进制是10000010，这是阶码。
+3. -12.5是负数，所以符号位是1。把符号位，阶码和尾数连起来。注意，尾数的第一位总是1，所以规定不存这一位的1，只取后23位：
+1 10000010 10010000000000000000000
+把这32位按8位一节整理一下，得：
+11000001 01001000 00000000 00000000
+就是十六进制的 C1480000.
+	*/
+	//int index = 1;
+
+	//float ind = 12.5;
+
+	//float ind1;
+	//ind1 = 154.07815;
+
+	//float ind2 = ind;
+
+	//unsigned char* pChar = reinterpret_cast<unsigned char*>(&ind);
+
+	//for (int i = sizeof(float) - 1; i >= 0; --i)
+	//{
+	//	PrintfBinary(pChar[i]);
+	//}
+	//cout<<endl;
+
+	////cout<<bitset<8>(ind)<<endl;
+
+	///*cout<<isBigEndian()<<endl;*/
+
+	////char* cp = (char*)&ind;
+	////cout << isBigEndian() << endl;
+	////string ret;
+	////ret = c2b(cp, 4);
+	////if (!isBigEndian())//如果是高字节序，则将字符串逆序
+	////{
+	////	for (int i = 3; i > 0; i--)
+	////	{
+	////		for (int j = 0; j < 8; j++)
+	////			cout << ret[8 * i + j];
+	////	}
+	////}
+	////cout<<ret<<endl;
+	///*scanf("%.8f", &ind);*/
+
+	////cout << ind << endl;
+
+	#pragma endregion
 
 	system("pause");
 
