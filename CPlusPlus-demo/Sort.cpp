@@ -208,6 +208,73 @@ void InsertionSort(int a[], int n)
 }
 
 /*
+* 希尔排序/（缩小增量排序）/插入排序改进版
+* 原理：通过将比较的全部元素分为几个区域去使用插入排序，从而提升插入排序的性能。
+* 希尔排序是基于插入排序的以下两点性质而提出改进方法的：
+* 插入排序在对几乎已经排好序的数据操作时，效率高，即可以达到线性排序的效率。
+* 但插入排序一般来说是低效的，因为插入排序每次只能将数据移动一位。
+* 平均时间复杂度：O(nlogn)~O(n^2)
+* 理想时间复杂度：O(n^1.3)
+* 最差时间复杂度：O(n^2)
+* 优化后最差时间复杂度：O(n3/2)
+* 空间复杂度：O(1)
+* 稳定性：不稳定
+*（虽然是插入排序的改进，一次性插入排序是有序的，但是同时插入过程中，相同元素可能在各自插入排序中移动改变顺序，因此不稳定）
+* 数据结构：数组
+*/
+void ShellSort(int a[], int n)
+{
+	/*int step = 0;
+	while (step <= n)
+		step = 3 * step + 1;
+	while (step >= 1)
+	{
+		for (int i = 0; i < n; i++)
+		{
+			int j = i - step;
+			int get = a[i];
+			while (j >= 0 && a[j] > get)
+			{
+				a[j + step] = a[j];
+				j = j - step;
+			}
+			int index = j + step;
+			a[index] = get;
+		}
+		step = (step - 1) / 3;
+	}*/	
+	int step = n / 2;
+	if(step % 2 == 0)
+		step++;
+	int s1 = 0; int s2 = 0; int s3 = 0;//方便调试查看数据
+	while(step>0)
+	{
+		for(int j = step;j < n;j++)
+		{
+			int temp = a[j];
+			int i = j - step;
+			s3 = a[i];
+			while(i >= 0 && a[i] > temp)
+			{
+				int index = i + step;
+				a[index] = a[i];
+				s1 = a[index];
+				i = i-step; //比较前一个值
+			}
+			if (i != j - step) { //交换最大那个值
+				a[i + step] = temp;
+				s2 = a[i + step];
+			}
+		}
+		if(step == 1)
+			break;
+		step = step/2; //递减增量
+		if(step % 2 ==0)
+			step++;
+	}
+}
+
+/*
 * 归并操作，归并算法核心
 */
 void Merge(int a[], int temp[], int left, int right)

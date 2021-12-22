@@ -15,6 +15,9 @@ void QuickSort(int a[], int left, int right);
 //≤Â»Î≈≈–Ú
 void InsertionSort(int a[], int n);
 
+//œ£∂˚≈≈–Ú
+void ShellSort(int a[], int n);
+
 //πÈ≤¢≈≈–Ú
 void MergeSort(int a[], int left, int right);
 

@@ -163,28 +163,28 @@ int main()
 
 	#pragma region ≈≈–ÚÀ„∑®
 
-	//int a[6] = {13, 6, 8, 4, 9, 5};
-	//int n = sizeof(a) / sizeof(int);
-	//cout << "≈≈–Ú«∞£∫";
-	//for (int i = 0; i < n; i++) {
-	//	cout << a[i] << " ";
-	//}
+	int a[7] = {13, 6, 8, 4, 9, 5, 10};
+	int n = sizeof(a) / sizeof(int);
+	cout << "≈≈–Ú«∞£∫";
+	for (int i = 0; i < n; i++) {
+		cout << a[i] << " ";
+	}
 
-	////BubbleSort(a, n);
-	// //CocktailSort(a, n);
-	////SelectionSort(a, n);
-	////QuickSort(a, 0, n -1);
-	////InsertionSort(a, n);
-	// ShellSort(a, n);
-	////MergeSort(a, 0, n-1);
-	////HeapSort(a, n);
+	//BubbleSort(a, n);
+	 //CocktailSort(a, n);
+	//SelectionSort(a, n);
+	//QuickSort(a, 0, n -1);
+	//InsertionSort(a, n);
+	 ShellSort(a, n);
+	//MergeSort(a, 0, n-1);
+	//HeapSort(a, n);
 
-	//cout << endl <<"≈≈–Ú∫Û£∫";
-	//for (int i = 0; i < n; i++) {
-	//	cout << a[i] << " ";
-	//}
+	cout << endl <<"≈≈–Ú∫Û£∫";
+	for (int i = 0; i < n; i++) {
+		cout << a[i] << " ";
+	}
 
-	//cout << endl;
+	cout << endl;
 
 	#pragma endregion
 
