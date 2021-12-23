@@ -2,10 +2,13 @@
 #include "Polymorphism.h"
 #include "Copy.h"
 #include "Sort.h"
+#include <chrono>	// 统计运行时间需要
 
 #include <bitset>
 
 using namespace std;
+
+using namespace chrono;
 
 /*
 * 结构体空间计算总结
@@ -115,6 +118,16 @@ void PrintfBinary(unsigned char cData)
 	}
 }
 
+
+#define RUN_SORT(FUNC)	\
+{	\
+	auto tStart = system_clock::now();	\
+	FUNC;	\
+	auto tEnd = system_clock::now();	\
+	auto tCost = duration_cast<nanoseconds>(tEnd - tStart);	\
+	cout << "耗时: " << tCost.count() << " ns(纳秒)." << endl;	\
+}
+
 int main()
 {
 	#pragma region 多态&&虚函数&&纯虚函数 示例
@@ -169,18 +182,20 @@ int main()
 	for (int i = 0; i < n; i++) {
 		cout << a[i] << " ";
 	}
-
+	cout << endl;
 	//BubbleSort(a, n);
 	 //CocktailSort(a, n);
 	//SelectionSort(a, n);
 	//QuickSort(a, 0, n -1);
 	//InsertionSort(a, n);
 	 //ShellSort(a, n);
-	 InsertionSortDichotomy(a, n);
+	 //InsertionSortDichotomy(a, n);
 	//MergeSort(a, 0, n-1);
 	//HeapSort(a, n);
 
-	cout << endl <<"排序后：";
+	RUN_SORT(BucketSort(a, n));
+
+	cout << "排序后：";
 	for (int i = 0; i < n; i++) {
 		cout << a[i] << " ";
 	}

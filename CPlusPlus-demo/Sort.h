@@ -26,3 +26,10 @@ void MergeSort(int a[], int left, int right);
 
 //∂—≈≈–Ú
 void HeapSort(int a[], int n);
+
+
+//Õ∞≈≈–Ú
+void BucketSort(int a[], int n);
+
+//º∆ ˝≈≈–Ú
+void CountingSort(int a[], int n);

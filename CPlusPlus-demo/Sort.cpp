@@ -447,3 +447,76 @@ void HeapSort(int a[], int n)
 		HeapIfy(a, 0, iHeadSize);
 	}
 }
+
+/*
+* 桶排序(鸽巢排序归纳结果)(计数排序的升级版)
+* 工作的原理是将数组元素映射到有限数量个桶里，利用计数排序可以定位桶的边界，每个桶再各自进行桶内排序(可以使用其他排序或者递归方式继续使用桶排序)
+* 它利用了函数的映射关系，高效与否的关键就在于这个映射函数的确定，其规则如下：
+* 在额外空间充足的情况下，尽量增大桶的数量
+* 使用的映射函数能够将输入的 N 个数据均匀的分配到 K 个桶中
+* 平均时间复杂度：O(n) 各个桶内元素个数均匀
+* 理想时间复杂度：O(n) 每个元素占一个桶且个数均匀
+* 最差时间复杂度：O(nlogn)或O(n^2) 只有一个桶，取决于桶内排序方式
+* 空间复杂度：O(n + maxValue + 1)
+* 稳定性：稳定
+* 数据结构：数组
+*/
+void BucketSort(int a[], int n)
+{
+	int maxValue = a[0]; //假设最大为a[0]
+	for(int k = 1; k < n; k++)  //遍历比较，找到大的就赋值给maxValue
+	{
+		if(a[k] > maxValue)
+			maxValue = a[k];
+	}
+	 int tempLen = maxValue + 1;
+	 int *temp = new int[tempLen];  //获得空桶大小
+	 for(int i = 0; i < tempLen; i++)  //空桶初始化
+		 temp[i] = 0;
+	 for (int i = 0; i < n; i++)   //寻访序列，并且把项目一个一个放到对应的桶子去。
+		 temp[a[i]]++;
+	 int j = 0;
+	 for(int i = 0; i < tempLen; i++)
+	 {
+		 while(temp[i] != 0) //对每个不是空的桶子进行排序。
+		 {
+			 a[j] = i;  //从不是空的桶子里把项目再放回原来的序列中。i为索引,数组的索引位置就表示值
+			 j++;
+			 temp[i]--;
+		 }
+    }
+	 delete[]temp;
+}
+
+/*
+* 计数排序
+* 通过操作额外的计数数组去将原有数组中的元素进行排序
+* 通常拥有数据范围很小的数组，一般只操作数字，不操作字母排序
+* 如果数组数据范围过大，计数排序需要占用大量的时间和空间
+* 平均时间复杂度：O(n + k)
+* 理想时间复杂度：O(n + k)
+* 最差时间复杂度：O(n + k)
+* 空间复杂度：O(n + k)
+* 稳定性：稳定
+* 数据结构：数组
+*/
+void CountingSort(int a[], int n)
+{
+	int max = a[0];
+	for(int i = 0; i < n; ++i)
+	{
+		if(a[i] > max) //找出数组的最大最小值，确定计数的范围
+			max = a[i];
+	}
+	int *temp = new int[max + 1];  //分配统计计数数组空间，大小为原数组的数域范围
+	for(int i = 0; i < max + 1; i++) //初始化数组
+		temp[i] = 0;
+	 for(int i = 0; i < n; i++) //将原先数组中的值作为temp数组下标存储到对应下标数组中
+		temp[a[i]]++;
+	 int index = 0;
+	 for(int j = 0; j <= max; j++) {
+		 while((temp[j]--) >0)
+			 a[index++] = j; //填充数据到新数组中
+	 }
+	 delete[]temp;
+}
