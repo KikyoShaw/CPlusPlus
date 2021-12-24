@@ -1,4 +1,5 @@
 #include "Sort.h"
+#include <math.h>
 
 /*
 * 分治法是一种解决问题的思想：
@@ -449,6 +450,55 @@ void HeapSort(int a[], int n)
 }
 
 /*
+* 桶排序需要用到计数排序对桶进行边界操作
+* 需要用到插入排序对桶内元素进行排序
+*/
+const int kn = 2;
+static int temp[kn];
+static void CountingSort1(int a[], int n)
+{
+	int max = a[0];
+	for(int i = 0; i < n; ++i)
+	{
+		if(a[i] > max) //找出数组的最大最小值，确定计数的范围
+			max = a[i];
+	}
+	for(int i = 0; i < kn; i++) //初始化桶
+		temp[i] = 0;
+	for (int i = 0; i < n; i++) //将原先数组中的值作为temp数组下标存储到对应桶中
+	{
+		int index = a[i] / (max + 1); //映射函数，由于原数组最大值为13，因此需要考虑14(0-13)个元素存储，总共两个桶
+		temp[index]++;
+	}
+	for (int i = 1; i < kn; i++)    // 定位桶边界
+        temp[i] = temp[i] + temp[i - 1]; //初始时，temp[i]-1为i号桶最后一个元素的位置
+	int *tempA = new int[n];  //分配统计计数数组空间，大小为原数组大小
+	 for (int i = n - 1; i >= 0; i--)// 从后向前扫描保证计数排序的稳定性(重复元素相对次序不变)
+    {
+		int index = a[i] / (max + 1); // 元素a[i]位于index号桶
+        tempA[--temp[index]] =a[i];  // 把每个元素a[i]放到它在临时数组tempA中的正确位置上                            
+    }
+    for (int i = 0; i < n; i++)
+        a[i] = tempA[i]; //将数据重新写回原数组
+	delete[]tempA;
+}
+
+static void InsertionSort1(int a[], int left, int right)
+{
+    for (int i = left + 1; i <= right; i++)
+    {
+        int get = a[i];
+        int j = i - 1;
+        while (j >= left && a[j] > get)
+        {
+            a[j + 1] = a[j];
+            j--;
+        }
+        a[j + 1] = get;
+    }
+}
+
+/*
 * 桶排序(鸽巢排序归纳结果)(计数排序的升级版)
 * 工作的原理是将数组元素映射到有限数量个桶里，利用计数排序可以定位桶的边界，每个桶再各自进行桶内排序(可以使用其他排序或者递归方式继续使用桶排序)
 * 它利用了函数的映射关系，高效与否的关键就在于这个映射函数的确定，其规则如下：
@@ -457,11 +507,23 @@ void HeapSort(int a[], int n)
 * 平均时间复杂度：O(n) 各个桶内元素个数均匀
 * 理想时间复杂度：O(n) 每个元素占一个桶且个数均匀
 * 最差时间复杂度：O(nlogn)或O(n^2) 只有一个桶，取决于桶内排序方式
-* 空间复杂度：O(n + maxValue + 1)
+* 空间复杂度：O(n + kn) kn为桶的个数，假如限定两个桶
 * 稳定性：稳定
 * 数据结构：数组
 */
 void BucketSort(int a[], int n)
+{
+	CountingSort1(a, n); //利用计数排序确定各个桶的边界（分桶）
+	for (int i = 0; i < kn; i++) //循环操作两个桶
+	{
+		int left = temp[i]; //temp[i]为i号桶第一个元素的位置
+        int right = (i == kn - 1 ? n - 1 : temp[i + 1] - 1);// temp[i+1]-1为i号桶最后一个元素的位置
+		if (left < right)
+			InsertionSort1(a, left, right);// 对元素个数大于1的桶进行桶内插入排序
+	}
+}
+
+void BucketSort1(int a[], int n)
 {
 	int maxValue = a[0]; //假设最大为a[0]
 	for(int k = 1; k < n; k++)  //遍历比较，找到大的就赋值给maxValue
@@ -519,4 +581,73 @@ void CountingSort(int a[], int n)
 			 a[index++] = j; //填充数据到新数组中
 	 }
 	 delete[]temp;
+	//int max = a[0];  
+ //   int min = a[0];  
+ //   for (int i = 0; i < n; ++i)  //选出最大数与最小数，确定数组的大小  
+ //   {  
+ //       if (a[i] > max)  
+ //           max = a[i];  
+ //       if (a[i] < min)  
+ //           min = a[i];  
+ //   }  
+ //   int len = max - min + 1;  //分配统计计数数组空间，大小为原数组的数域范围
+ //   int *temp = new int[len];   
+ //   for (int i = 0; i < len; ++i) //初始化数组
+ //       temp[i] = 0;   
+ //   for (int i = 0; i < n; ++i)  //将原先数组中的值作为temp数组下标存储到对应下标数组中
+ //       temp[a[i] - min]++;    
+ //   int index = 0;  
+ //   for (int i = 0; i < len; ++i)
+ //   {  
+ //       while ((temp[i]--) > 0)   //将数据重新写回数组
+ //       {  
+ //           a[index] = i + min;  
+ //           index++;  
+ //       }  
+ //   }
+	//delete[]temp;
+}
+
+/*
+* 基数排序
+* 基于数据位数的一种排序算法。
+* 将所有待比较数值（正整数）统一为同样的数位长度，数位较短的数前面补零。
+* 然后，从最低位开始，依次进行一次排序。这样从最低位排序一直到最高位排序完成以后, 数列就变成一个有序序列
+* 平均时间复杂度：O(n * kn)
+* 理想时间复杂度：O(n * kn)
+* 最差时间复杂度：O(n * kn)
+* 空间复杂度：O(n * kn)
+* 稳定性：稳定
+* 数据结构：数组
+*/
+void LsdRadixSort(int a[], int n)
+{
+    int digit = 0;  //求出其最大位数   
+    for (int i = 0; i < n; i++)  
+    {  
+        while (a[i] > (pow(10,digit)))   
+            digit++; 
+    }  
+    int flag = 1;  
+    for (int j = 1; j <= digit; j++)  
+    {  
+        int digit[10] = { 0 };  //建立数组统计每个位出现数据次数
+        for (int i = 0; i < n; i++)  
+            digit[(a[i] / flag)%10]++;  
+        int beginIndex[10] = { 0 };   //建立数组统计起始下标 
+        for (int i = 1; i < 10; ++i)  
+            beginIndex[i] = beginIndex[i - 1] + digit[i - 1];   
+        int *temp = new int[n]; //建立辅助数组 
+		for(int i = 0; i < n; i++) //初始化数组
+			temp[i] = 0;  
+        for (int i = 0; i < n; i++)  //将数据写入辅助数组
+        {  
+            int index = (a[i] / flag)%10;  
+            temp[beginIndex[index]++] = a[i];  
+        }  
+        for (int i = 0; i < n; i++)  //将数据重新写回原数组
+            a[i] = temp[i];  
+        flag = flag * 10;  
+        delete []temp;  
+    }  
 }

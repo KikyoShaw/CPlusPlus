@@ -33,3 +33,6 @@ void BucketSort(int a[], int n);
 
 //计数排序
 void CountingSort(int a[], int n);
+
+//基数排序
+void LsdRadixSort(int a[], int n);

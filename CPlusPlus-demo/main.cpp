@@ -176,6 +176,7 @@ int main()
 
 	#pragma region ≈≈–ÚÀ„∑®
 
+	//int a[6] = {1314, 696, 856, 4, 956, 52};
 	int a[6] = {13, 6, 8, 4, 9, 5};
 	int n = sizeof(a) / sizeof(int);
 	cout << "≈≈–Ú«∞£∫";
@@ -194,6 +195,7 @@ int main()
 	//HeapSort(a, n);
 
 	RUN_SORT(BucketSort(a, n));
+	//RUN_SORT(LsdRadixSort(a, n));
 
 	cout << "≈≈–Ú∫Û£∫";
 	for (int i = 0; i < n; i++) {
