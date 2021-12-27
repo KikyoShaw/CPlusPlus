@@ -1,5 +1,6 @@
 #include "Matching.h"
 #include <iostream>
+#include <vector>
 
 /*
 * BF匹配算法
@@ -40,42 +41,84 @@ int BruteForce(const string& s1, const string& s2)
 * 好后缀表右移位数 = 好后缀出现的位置 – 好后缀在模式串中上一次出现的位置。
 * 实际运用过程中，遇到坏字符的概率要远远大于好后缀的情况，因此大部分情况只需要用到坏字符表即可，这也是BM算法后面改进版本BMH的思想
 * https://www.ruanyifeng.com/blog/2013/05/boyer-moore_string_search_algorithm.html
+* 理想时间复杂度O(n)
 * 时间复杂度O(n/m)
 * 最坏时间复杂度：O(m*n)
 * 空间复杂度O(k) 坏字符表空间大小k
 */
-
-int *CreatPreBmGS(const string& str)
+//存储子串的最长匹配长度
+void GetSuff(const string& str, vector<int>& suff)
 {
-	int* BmGS = new int[256]; //为坏字符表申请内存空间
-	for (int i = 0; i < 256; i++) //初始化表
-		BmGS[i] = 0;
-	for (int i = 0; i < str.size(); i++) //寻访序列
+	int len = str.size();
+	int k;
+	for (int i = len - 2; i >= 0; i--)
 	{
-		int index = str[i];
-		BmGS[index] = i;
+		k = i;
+		while (k >= 0 && str[k] == str[len - 1 - i + k])
+			k--;
+		suff[i] = i - k;
 	}
-	return BmGS;
+}
+//创建好后缀表
+void CreatBmGS(const string& str, vector<int>& BmGS)
+{
+	int i, j;
+	int len = str.size();
+	vector<int> suff(len + 1, 0);
+	GetSuff(str, suff);//suff存储子串的最长匹配长度
+	//初始化 当没有好后缀也没有公共前缀时
+	for (i = 0; i < len; i++)
+		BmGS[i] = len;
+	//没有好后缀 有公共前缀 调用suff 但是要右移一位 类似KMP里的next数组
+	for (i = len - 1; i >= 0; i--)
+		if (suff[i] == i + 1)
+			for (j = 0; j < len - 1; j++)
+				if (BmGS[j] == len)//保证每个位置不会重复修改
+					BmGS[j] = len - 1 - i;
+	//有好后缀 有公共前缀
+	for (i = 0; i < len - 1; i++)
+		BmGS[len - 1 - suff[i]] = len - 1 - i;//移动距离
+}
+//创建坏字符表
+void CreatBmBC(const string& str, vector<int>& BmBC)
+{
+	int len = str.size();
+	for (int i = 0; i < 256; i++)//不匹配的时候直接移动子串
+		BmBC.push_back(len);//初始化表
+	for (int i = 0; i < len - 1; i++)//寻访序列，靠右原则
+		BmBC[str[i]] = len - i - 1;
 }
 
 int BoyerMoore(const string& s1, const string& s2)
 {
 	int s1_len = s1.size();
 	int s2_len = s2.size();
-	int *BmGS = CreatPreBmGS(s2); //创建坏字符表
-	int skipIndex = 0; //跳进长度区域
-	for (int i = 0; i < s1_len - s2_len; i += skipIndex) {
-		skipIndex = 0; //重新赋值计算
-		for (int j = s2_len - 1; j >= 0; j--) { //从右往左遍历
-			if (s1[i + j] != s2[j]) {
-				int _skipIndex = j = BmGS[s1[i + j]]; //利用坏字符表计算最大右移值：右移位数 = 坏字符出现的位置 – 坏字符在模式串中上一次出现的位置。
-				skipIndex = _skipIndex > 1 ? _skipIndex : 1;//跳进长度不能小于1
-				break;
-			}
-		}
-		if (0 == skipIndex)
+	vector<int> BmBC;
+	CreatBmBC(s2, BmBC); //创建坏字符表
+	vector<int> BmGS(s2_len, 0);
+	CreatBmGS(s2, BmGS); //创建好后缀表
+	int i = 0;
+	int j = 0;
+	while (i <= s1_len - s2_len)
+	{
+		for (j = s2_len - 1; j > -1 && s1[i + j] == s2[j]; j--);
+		if (j == (-1))
 			return i;
+		i += max(BmGS[j], BmBC[s1[i + j]] - (s2_len - 1 - j));
 	}
+	//int skipIndex = 0; //跳进长度区域
+	//for (int i = 0; i < s1_len - s2_len; i += skipIndex) {
+	//	skipIndex = 0; //重新赋值计算
+	//	for (int j = s2_len - 1; j >= 0; j--) { //从右往左遍历
+	//		if (s1[i + j] != s2[j]) {
+	//			int _skipIndex = j = BmGS[s1[i + j]]; //利用坏字符表计算最大右移值：右移位数 = 坏字符出现的位置 – 坏字符在模式串中上一次出现的位置。
+	//			skipIndex = _skipIndex > 1 ? _skipIndex : 1;//跳进长度不能小于1
+	//			break;
+	//		}
+	//	}
+	//	if (0 == skipIndex)
+	//		return i;
+	//}
 	return 0;
 }
 
