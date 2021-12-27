@@ -2,6 +2,7 @@
 #include "Polymorphism.h"
 #include "Copy.h"
 #include "Sort.h"
+#include "Matching.h"
 #include <chrono>	// 统计运行时间需要
 
 #include <bitset>
@@ -176,34 +177,51 @@ int main()
 
 	#pragma region 排序算法
 
-	//int a[6] = {1314, 696, 856, 4, 956, 52};
-	int a[6] = {13, 6, 8, 4, 9, 5};
-	int n = sizeof(a) / sizeof(int);
-	cout << "排序前：";
-	for (int i = 0; i < n; i++) {
-		cout << a[i] << " ";
-	}
-	cout << endl;
-	//BubbleSort(a, n);
-	 //CocktailSort(a, n);
-	//SelectionSort(a, n);
-	//QuickSort(a, 0, n -1);
-	//InsertionSort(a, n);
-	 //ShellSort(a, n);
-	 //InsertionSortDichotomy(a, n);
-	//MergeSort(a, 0, n-1);
-	//HeapSort(a, n);
+	////int a[6] = {1314, 696, 856, 4, 956, 52};
+	//int a[6] = {13, 6, 8, 4, 9, 5};
+	//int n = sizeof(a) / sizeof(int);
+	//cout << "排序前：";
+	//for (int i = 0; i < n; i++) {
+	//	cout << a[i] << " ";
+	//}
+	//cout << endl;
+	////BubbleSort(a, n);
+	// //CocktailSort(a, n);
+	////SelectionSort(a, n);
+	////QuickSort(a, 0, n -1);
+	////InsertionSort(a, n);
+	// //ShellSort(a, n);
+	// //InsertionSortDichotomy(a, n);
+	////MergeSort(a, 0, n-1);
+	////HeapSort(a, n);
 
-	RUN_SORT(BucketSort(a, n));
-	//RUN_SORT(LsdRadixSort(a, n));
+	//RUN_SORT(BucketSort(a, n));
+	////RUN_SORT(LsdRadixSort(a, n));
 
-	cout << "排序后：";
-	for (int i = 0; i < n; i++) {
-		cout << a[i] << " ";
-	}
+	//cout << "排序后：";
+	//for (int i = 0; i < n; i++) {
+	//	cout << a[i] << " ";
+	//}
 
-	cout << endl;
+	//cout << endl;
 
+	#pragma endregion
+
+	#pragma region 匹配算法
+	string s1 = "kikyo";
+	string s2 = "ky";
+	
+	auto tStart = system_clock::now();
+
+	int index = BruteForce(s1, s2);
+
+	auto tEnd = system_clock::now();
+	auto tCost = duration_cast<nanoseconds>(tEnd - tStart);
+	if (index == 0)
+		cout << "s1与s2不匹配" << endl;
+	else
+		cout << "s1与s2匹配成功,字符开始匹配位置：" << index << endl;
+	cout << "耗时: " << tCost.count() << " ns(纳秒)." << endl;
 	#pragma endregion
 
 	#pragma region DOUBLE

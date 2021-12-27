@@ -141,10 +141,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Matching.cpp" />
     <ClCompile Include="Sort.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Copy.h" />
+    <ClInclude Include="Matching.h" />
     <ClInclude Include="Polymorphism.h" />
     <ClInclude Include="Sort.h" />
     <ClInclude Include="String.h" />
