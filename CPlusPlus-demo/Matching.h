@@ -11,3 +11,6 @@ int BoyerMoore(const string& s1, const string& s2);
 
 //RKÀ„∑®
 int RobinKarp(const string& s1, const string& s2);
+
+//KMPÀ„∑®
+int KnuthMorrisPratt(const string& s1, const string& s2);

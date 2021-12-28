@@ -269,6 +269,86 @@ int RobinKarp(const string& s1, const string& s2)
 }
 
 /*
+* KMP匹配算法
+* 原理：当出现字符串不匹配时，可以将一部分之前已经匹配的字符内容存储到next数组中，利用next数组中存储的信息避免从头再去做匹配。
+* next数组又称为前缀表，KMP核心部分，作用是用于回退，它记录了模式串和主串不匹配的时候，模式串应该从哪里开始重新匹配。
+* 时间复杂度：O(m+n)
+*/
+
+/*
+* 前缀表(next数组)
+*/
+void getNext(const string &s, int *next)
+{
+	int k = -1; //初始化数据，从-1开始
+	next[0] = k;
+	int i = 0;
+	while (i < s.size() - 1)
+	{
+		if (k == -1 || s[i] == s[k]) { //当前后缀相同的时候
+			k++;  //长度增加
+			i++;
+			next[i] = k;//记录前缀长度
+		}
+		else //当前后缀不相同的时候
+			k = next[k];//开始回退
+	}
+}
+
+/*
+* 前缀表（next数组）优化版本
+*/
+void getNextVal(const string& s, int* next)
+{
+	int k = -1; //初始化数据，从-1开始
+	next[0] = k;
+	int i = 0;
+	while (i < s.size() - 1)
+	{
+		if (k == -1 || s[i] == s[k]) { //当前后缀相同的时候
+			k++;  //长度增加
+			i++;
+			if (s[i] != s[k])
+				next[i] = k;//记录前缀长度
+			else //因为不能出现s[i] = s[ next[i]]，所以当出现时需要继续递归，k = next[k] = next[next[k]]  
+				next[i] = next[k];
+		}
+		else //当前后缀不相同的时候
+			k = next[k];//开始回退
+	}
+}
+
+int KnuthMorrisPratt(const string& s1, const string& s2)
+{
+	int* next = new int[s2.size()];//创建next数组
+	getNext(s2, next);
+	int j = -1; //同next起始下标相同
+	for (int i = 0; i < s1.size(); i++) { //开始比较模式串和主串
+		while (j >= 0 && s1[i] != s2[j + 1]) //模式串和主串不匹配的时候
+			j = next[j]; //获取回退位置，从此位置开始匹配
+		if (s1[i] == s2[j + 1]) //当模式串和主串开始出现匹配
+			j++; //模式串开始往后移动
+		if (j == (s2.size() - 1)) //当主串中出现了模式串 则代表成功匹配
+			return (i - s2.size() + 1); //返回当前匹配位置
+	}
+	//int i = 0;
+	//while (i < s1.size() && j < s2.size()) //开始比较模式串和主串
+	//{
+	//	if (j == -1 || s1[i] == s2[j])  //初始开始的时候或者模式串和主串开始出现匹配
+	//	{
+	//		i++;//主串开始往后移动
+	//		j++;//模式串开始往后移动
+	//	}
+	//	else //模式串和主串不匹配的时候
+	//		j = next[j];  //获取回退位置，从此位置开始匹配
+	//}
+	//if (j == s2.size())  // 匹配成功
+	//	return i - j;//返回当前匹配位置
+	delete[]next;
+	return 0;
+}
+
+/*
 * 	int s1_len = s1.size();
 	int s2_len = s2.size();
 	unsigned int h = 1;
