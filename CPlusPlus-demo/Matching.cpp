@@ -122,6 +122,8 @@ int BoyerMoore(const string& s1, const string& s2)
 	return 0;
 }
 
+#pragma region BM
+
 //将模式串字符使用hash表示
 void generateBC(const string& b, int m, int bc[]) {
 	//b是模式串， m是模式串的长度， bc是散列表
@@ -174,12 +176,12 @@ int moveByGS(int j, int m, int suffix[], bool prefix[]) {
 }
 
 //BM算法
-int BM(const string& a, const string& b) 
+int BM(const string& a, const string& b)
 {
 	const int n = a.size();
 	const int m = b.size();
-	int *suffix = new int[m];
-	bool *prefix = new bool[m];
+	int* suffix = new int[m];
+	bool* prefix = new bool[m];
 
 	int bc[256];//bc记录模式串中每个字符最后出现的位置
 
@@ -208,3 +210,85 @@ int BM(const string& a, const string& b)
 	}
 	return -1;
 }
+
+#pragma endregion
+
+
+bool isMatch(const string& s1, int i, const string& s2, int m)
+{
+	int is, ip;
+	for (is = i, ip = 0; is != m && ip != m; is++, ip++)
+		if (s1[is] != s2[ip])
+			return false;
+	return true;
+}
+
+/*
+* RK匹配算法
+* BF算法改进版本
+* 原理：哈希表原理，需要设计哈希公式：(S[i]-'a')*d^(S.length-i) i从1开始
+* 通过计算模式串的哈希值，然后比较i位置上主串与模式串长度相等字母的哈希值
+* 不相等就计算i+1位置的值等于i位置的值减去最高位的值再乘以进制，再加上i+S.length位置的值,相等的时候再进行二次字母匹配（避免哈希冲突）
+* 时间复杂度：O(m*n)
+* 理想时间复杂度：O(m+n)
+*/
+bool check(const string& s1, const string& s2)  //比较两个string是否相同
+{
+	if (s1.size() != s2.size())return false;
+	int len = (int)s1.size();
+	for (int i = 0; i < len; i++) {
+		if (s1[i] != s2[i])return false;
+	}
+	return true;
+}
+int RobinKarp(const string& s1, const string& s2)
+{
+	int s1_len = s1.size();
+	int s2_len = s2.size();
+	int radix = 256;//字母表的大小
+	int prime = 108;//参与计算哈希值的素数
+	int s1_hash = 0; //字符串s1(s1_len - 1)位子串的哈希值
+	int s2_hash = 0; //字符串s2的哈希值
+	int lm_hash = 1;//最左边的哈希值
+	for (int i = 0; i < s2_len; i++)
+		s2_hash = (s2_hash * radix + s2[i]) % prime;//计算s2的哈希值
+	for (int i = 0; i < s2_len - 1; i++)
+		s1_hash = (s1_hash * radix + s1[i]) % prime;//计算出s1 (s1_len - 1)位子串的哈希值
+	for (int i = 0; i < s2_len - 1; i++)
+		lm_hash = (lm_hash * radix) % prime;//最左边的哈希值，即radix^(s2_len-1)%prime
+	for (int i = s2_len - 1; i < s1_len; i++) {
+		s1_hash = (s1_hash * radix + s1[i]) % prime;
+		if (s1_hash == s2_hash) {//哈希值相等可初步判定字符串匹配成功
+			string sub = s1.substr(i - s2_len + 1, s2_len);
+			if (check(sub, s2)) //加上字符串对比保证结果正确, 主要目的防止哈希冲突
+				return i - s2_len + 1;
+		}
+		s1_hash = (s1_hash + prime - lm_hash * s1[i - s2_len + 1] % prime) % prime;
+	}
+	return 0;
+}
+
+/*
+* 	int s1_len = s1.size();
+	int s2_len = s2.size();
+	unsigned int h = 1;
+	unsigned int A = 0;
+	unsigned int St = 0;
+
+	for (int i = 0; i < s2_len - 1; i++)
+		h = (h * 26) % 108;
+	//获取A和St的哈希值
+	for (int i = 0; i != s2_len; i++) {
+		A = (26*A + (s2[i] - 'a')) % 108;
+		St = (26*St + (s1[i] - 'a')) % 108;
+	}
+	for (int i = 0; i != s1_len- s2_len; i++) {
+		if (A == St) {
+			if (isMatch(s1, i, s2, s2_len))
+				return i;
+		}
+		else {
+			St = ( 28 * (St - h*(s1[i] - 'a'))+(s1[i + s2_len]-'a')) % 108;
+		}
+	}
+*/

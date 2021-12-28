@@ -207,12 +207,13 @@ int main()
 
 	#pragma region ∆•≈‰À„∑®
 	string s1 = "kikiykyo";
-	string s2 = "kiyk";
+	string s2 = "kiy";
 	
 	auto tStart = system_clock::now();
 
 	//int index = BruteForce(s1, s2);
-	int index = BoyerMoore(s1, s2);
+	//int index = BoyerMoore(s1, s2);
+	int index = RobinKarp(s1, s2);
 
 	auto tEnd = system_clock::now();
 	auto tCost = duration_cast<nanoseconds>(tEnd - tStart);
