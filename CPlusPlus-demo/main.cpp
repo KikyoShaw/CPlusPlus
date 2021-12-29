@@ -208,17 +208,20 @@ int main()
 	#pragma region 匹配算法
 	string s1 = "kkikkikkyk";
 	string s2 = "kkikky";
+	//string s1 = "kikykyo";
+	//string s2 = "kyk";
 	
 	auto tStart = system_clock::now();
 
 	//int index = BruteForce(s1, s2);
 	//int index = BoyerMoore(s1, s2);
 	//int index = RobinKarp(s1, s2);
-	int index = KnuthMorrisPratt(s1, s2);
+	//int index = KnuthMorrisPratt(s1, s2);
+	int index = Sunday(s1, s2);
 
 	auto tEnd = system_clock::now();
 	auto tCost = duration_cast<nanoseconds>(tEnd - tStart);
-	if (index == 0)
+	if (index == -1)
 		cout << "s1与s2不匹配" << endl;
 	else
 		cout << "s1与s2匹配成功,字符开始匹配位置：" << index << endl;

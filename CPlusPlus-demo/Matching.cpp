@@ -28,7 +28,7 @@ int BruteForce(const string& s1, const string& s2)
 	}
 	if (s2[j] == '\0')
 		return index;
-	return 0;
+	return -1;
 }
 
 /*
@@ -119,7 +119,7 @@ int BoyerMoore(const string& s1, const string& s2)
 	//	if (0 == skipIndex)
 	//		return i;
 	//}
-	return 0;
+	return -1;
 }
 
 #pragma region BM
@@ -265,7 +265,7 @@ int RobinKarp(const string& s1, const string& s2)
 		}
 		s1_hash = (s1_hash + prime - lm_hash * s1[i - s2_len + 1] % prime) % prime;
 	}
-	return 0;
+	return -1;
 }
 
 /*
@@ -345,8 +345,84 @@ int KnuthMorrisPratt(const string& s1, const string& s2)
 	//if (j == s2.size())  // 匹配成功
 	//	return i - j;//返回当前匹配位置
 	delete[]next;
-	return 0;
+	return -1;
 }
+
+/*
+* Sunday匹配算法
+* 又称线性字符串模式匹配算法
+* 原理：在匹配过程中，模式串并不被要求一定要按从左向右进行比较还是从右向左进行比较，
+* 它在发现不匹配时，算法能跳过尽可能多的字符以进行下一步的匹配，从而提高了匹配效率。
+* 如果该字符没有在模式串中出现则直接跳过，即移动位数 = 模式串长度 + 1
+* 否则，其移动位数 = 模式串长度 - 该字符最右出现的位置(以0开始) = 模式串中该字符最右出现的位置到尾部的距离 + 1
+* 时间复杂度O(n)
+* 最坏时间复杂度：O(m*n)
+*/
+int Sunday(const string& s1, const string& s2)
+{
+	int m = s2.size();
+	int j = 0;
+	int k = s2.size() - 1;
+	for (int i = 0; i < s1.size();) //遍历主串
+	{
+		if (s1[i] != s2[j])
+		{
+			for (k = s2.size() - 1; k >= 0; k--) //遍历模式串，查找模式串和主串[i+s1.size()+1]相等的最右位置
+			{
+				if(s2[k] == s1[m]) //匹配跳出循环
+					break;
+			}
+			i = m - k; //移到下一匹配开始的第一个位置，最大限度跳过相同的元素
+			j = 0; //模式串还是从第一位开始匹配
+			m = i + s2.size(); //m值为下一次匹配的主串最后一位值的下一位
+			if (m > s1.size()) //下一次匹配的主串最后一位值的下一位超过主串长度。此时匹配失败
+				return -1;
+			
+		}
+		else {
+			if (j == s2.size() - 1) //当j为模式串最后一位，则匹配成功
+				return i - j;
+			i++;
+			j++;
+		}
+	}
+	return -1;
+}
+
+//int Sunday(const string& s1, const string& s2)
+//{
+//	int s1_size = s1.size();
+//	int s2_size = s2.size();
+//	int* temp = new int[1000];
+//	// 默认值，移动m+1位
+//	for (int i = 0; i < 1000; i++) {
+//		temp[i] = s2_size + 1;
+//	}
+//	// 模式串P中每个字母出现的最后的下标
+//	// 所对应的主串参与匹配的最末位字符的下一位字符移动到该位，所需要的移动位数
+//	for (int i = 0; i < s2_size; i++) {
+//		temp[s2[i]] = s2_size - i;
+//	}
+//	// 模式串开始位置在主串的哪里
+//	int s = 0;
+//	// 模式串已经匹配到的位置
+//	int j;
+//	while (s <= s1_size - s2_size) {
+//		j = 0;
+//		while (s1[s + j] == s2[j]) {
+//			j++;
+//			// 匹配成功
+//			if (j >= s2_size) {
+//				return s;
+//			}
+//		}
+//		// 找到主串中当前跟模式串匹配的最末字符的下一个字符
+//		// 在模式串中出现最后的位置
+//		// 所需要从(模式串末尾+1)移动到该位置的步数
+//		s += temp[s1[s + s2_size]];
+//	}
+//	return 0;
+//}
 
 /*
 * 	int s1_len = s1.size();

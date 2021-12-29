@@ -14,3 +14,6 @@ int RobinKarp(const string& s1, const string& s2);
 
 //KMPËã·¨
 int KnuthMorrisPratt(const string& s1, const string& s2);
+
+//SundayËã·¨
+int Sunday(const string& s1, const string& s2);
